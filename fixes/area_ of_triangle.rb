@@ -1,9 +1,9 @@
 puts 'Введите размер основания'
-base = gets.chomp.to_i
+base = gets.chomp.to_f
 
 puts 'Введите размер высоты '
 
-height = gets.chomp.to_i
+height = gets.chomp.to_f
 
 area = 0.5 * height * base
 
