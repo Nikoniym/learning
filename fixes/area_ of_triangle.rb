@@ -8,4 +8,3 @@ height = gets.chomp.to_i
 area = 0.5 * height * base
 
 puts "Площадь треугольника равна #{area}"
-
