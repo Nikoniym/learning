@@ -20,4 +20,3 @@ else
     puts 'Корней нет!'
   end
 end
-	 
