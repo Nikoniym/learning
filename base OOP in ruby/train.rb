@@ -1,5 +1,5 @@
 class Train
-  attr_accessor :speed
+  attr_accessor :speed, :route
   attr_reader :name, :type, :count_cars
 
   def initialize(name, type, count_cars, speed = 0) 
@@ -7,35 +7,45 @@ class Train
     @type = type
     @count_cars = count_cars
     @speed = speed
+    @route_position = 0    
   end
 
-  def change_car(change) 
-    @speed = 0
-    
-    @count_cars += 1 if change == '+'
-    @count_cars -= 1 if change == '-' && @count_cars != 0 
-
+  def add_car 
+    @speed = 0    
+    @count_cars += 1     
     puts @count_cars
   end
 
-  def set_route(route)
-    @route_position = 0
-    @route = route
-    
-    puts "Установлен маршрут #{route[0]} - #{route[-1]}"
+  def delete_car 
+    @speed = 0
+    @count_cars -= 1 if @count_cars != 0
+    puts @count_cars
   end
 
-  def change_station(change)
-    if !@route_position.nil?
+  # def set_route
+  #   if @route    
+  #     @route_position = 0
+  #     puts "Установлен маршрут #{@route.name}"
+  #   else
+  #     puts 'Утановите маршрут!'
+  # end
 
-      if change == '+' && (@route.size - 1) > @route_position
+  def next_station
+    if @route
+      if (@route.stations.size - 1) > @route_position
         @route_position += 1 
-        puts "Текущая станция #{@route[@route_position]}"
+        puts "Текущая станция #{@route.stations[@route_position].name}"
       end
+    else
+      puts 'Установите маршрут'
+    end
+  end
 
-      if change == '-' && @route_position != 0 
+  def prev_station
+    if @route
+      if  @route_position != 0 
         @route_position -= 1
-        puts "Текущая станция #{@route[@route_position]}"
+        puts "Текущая станция #{@route.stations[@route_position].name}"
       end
     else
       puts 'Установите маршрут'
@@ -43,10 +53,10 @@ class Train
   end
 
   def position
-    if !@route_position.nil?
-      puts "Пердыдущая станция #{@route[@route_position - 1]}" if @route_position != 0
-      puts "Текущая станция #{@route[@route_position]}"
-      puts "Следующая станция #{@route[@route_position + 1]}" if (@route.size - 1) > @route_position
+    if @route
+      puts "Пердыдущая станция #{@route.stations[@route_position - 1].name}" if @route_position != 0
+      puts "Текущая станция #{@route.stations[@route_position].name}"
+      puts "Следующая станция #{@route.stations[@route_position + 1].name}" if (@route.stations.size - 1) > @route_position
     else
       puts 'Установите маршрут'
     end
