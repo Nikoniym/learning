@@ -15,14 +15,10 @@ class Route
   end
 
   def delete_station(delete_station)    
-    if @stations[1..-2].include?(delete_station)
-      @stations.delete(delete_station)
-    else
-      puts "Станции #{name}, нет в списке промежуточных станций"
-    end   
+    @stations[1..-2].delete(delete_station)
   end
 
   def all_station
     puts @stations.join(' - ')
-  end 
+  end
 end
