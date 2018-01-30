@@ -7,7 +7,7 @@ class Station
   end
 
   def add_train(train)     
-    if @trains.select{ |train_station| train_station.name == train.name }.size.zero? #проверка есть ли поезд с таким номером на станции
+    if !@trains.include?(train) 
       @trains << train
       puts "Поезд с № #{train.name} прибыл станцию"
     else
@@ -25,7 +25,7 @@ class Station
 
   def list_trains_type(type)
     if !@trains.empty?      
-      @trains.each { |train| puts train if type == train.type }      
+      @trains.each { |train| train if type == train.type }      
     else
       puts 'На станции нет поездов'
     end      
@@ -33,7 +33,7 @@ class Station
 
   def send_train(train)
     if !@trains.empty?  
-      if @trains.select{ |train_station| train_station == train }.size > 0    
+      if @trains.include?(train)  
         @trains.delete(train)         
       else
         puts 'Поезда с таким номером нет'
