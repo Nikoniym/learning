@@ -1,20 +1,20 @@
 class Route
   attr_reader :stations, :name
 
-  def initialize(first_station, last_station)    
+  def initialize(first_station, last_station)
     @name = "#{first_station.name} - #{last_station.name}"
     @stations = [first_station, last_station]
   end
-  
-  def add_station(new_station)  
-    if !@stations.include?(new_station)     
-      @stations.insert(-2, new_station)      
+
+  def add_station(new_station)
+    if !@stations.include?(new_station)
+      @stations.insert(-2, new_station)
     else
       puts "Станция #{name} уже есть в списке"
     end
   end
 
-  def delete_station(delete_station)    
+  def delete_station(delete_station)
     @stations[1..-2].delete(delete_station)
   end
 

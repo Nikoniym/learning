@@ -6,12 +6,12 @@ class Station
     @trains = []
   end
 
-  def add_train(train)     
-    if !@trains.include?(train) 
+  def add_train(train)
+    if !@trains.include?(train)
       @trains << train
     else
       puts "Поезд с № #{train.name} уже на станции"
-    end   
+    end
   end
 
   def list_trains

@@ -1,19 +1,19 @@
-class Train  
+class Train
   attr_reader :name, :type, :count_cars, :speed
 
   def initialize(name, type, count_cars, speed = 0)
     @name = name
     @type = type
     @count_cars = count_cars
-    @speed = speed        
+    @speed = speed
   end
 
-  def add_car 
-    @speed = 0    
+  def add_car
+    @speed = 0
     @count_cars += 1
   end
 
-  def delete_car 
+  def delete_car
     @speed = 0
     @count_cars -= 1 if @count_cars != 0
   end
@@ -42,7 +42,7 @@ class Train
       if (@route.stations.size - 1) > @route_position
         @route.stations[@route_position].send_train(self)
         @route_position += 1
-        @route.stations[@route_position].add_train(self) 
+        @route.stations[@route_position].add_train(self)
         puts "Текущая станция #{@route.stations[@route_position].name}"
       end
     else
@@ -52,7 +52,7 @@ class Train
 
   def go_prev_station
     if @route
-      if  @route_position != 0 
+      if  @route_position != 0
         @route.stations[@route_position].send_train(self)
         @route_position -= 1
         @route.stations[@route_position].add_train(self)
@@ -64,26 +64,26 @@ class Train
   end
 
   def current_station
-    if @route    
-      @route.stations[@route_position]      
+    if @route
+      @route.stations[@route_position]
     else
       puts 'Установите маршрут'
-    end  
+    end
   end
 
-  def show_next_station    
+  def show_next_station
     if @route
       @route.stations[@route_position + 1] if (@route.stations.size - 1) > @route_position
     else
       puts 'Установите маршрут'
-    end  
+    end
   end
 
-  def show_prev_station    
+  def show_prev_station
     if @route
-       @route.stations[@route_position - 1] if @route_position != 0   
+       @route.stations[@route_position - 1] if @route_position != 0
     else
       puts 'Установите маршрут'
-    end  
+    end
   end
 end
