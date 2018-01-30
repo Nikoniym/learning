@@ -1,23 +1,18 @@
 class Station
   attr_reader :name
-  attr_accessor :train
 
   def initialize(name)
     @name = name
     @trains = []
   end
 
-  def add_train    
-    if @train   
-      if @trains.select{ |train_station| train_station.name == @train.name }.size.zero? #проверка есть ли поезд с таким номером на станции
-       @trains << @train
-       puts "Поезд с № #{@train.name} прибыл станцию"
-      else
-        puts "Поезд с № #{@train.name} уже на станции"
-      end
+  def add_train(train)     
+    if @trains.select{ |train_station| train_station.name == train.name }.size.zero? #проверка есть ли поезд с таким номером на станции
+      @trains << train
+      puts "Поезд с № #{train.name} прибыл станцию"
     else
-      puts 'Установите, какой поезд должен прибыть'
-    end
+      puts "Поезд с № #{train.name} уже на станции"
+    end   
   end
 
   def list_trains
@@ -28,25 +23,18 @@ class Station
     end
   end
 
-  def list_trains_type
-    if !@trains.empty?
-      types = []
-      @trains.each { |train| types << train.type } 
-
-      types.uniq.each do |type|
-        count = @trains.select{ |train| train.type == type }.size
-        puts "Тип #{type}: #{count}"
-      end
+  def list_trains_type(type)
+    if !@trains.empty?      
+      @trains.each { |train| puts train if type == train.type }      
     else
       puts 'На станции нет поездов'
     end      
   end
 
-  def send_train
+  def send_train(train)
     if !@trains.empty?  
-      if @trains.select{ |train_station| train_station.name == @train.name }.size > 0    
-        @trains.delete(@train)
-        puts "Поезд с № #{@train.name} убыл со станции" 
+      if @trains.select{ |train_station| train_station == train }.size > 0    
+        @trains.delete(train)         
       else
         puts 'Поезда с таким номером нет'
       end

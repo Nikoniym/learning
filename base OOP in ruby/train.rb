@@ -1,13 +1,11 @@
-class Train
-  attr_accessor :speed, :route
-  attr_reader :name, :type, :count_cars
+class Train  
+  attr_reader :name, :type, :count_cars, :speed
 
   def initialize(name, type, count_cars, speed = 0) 
     @name = name
     @type = type
     @count_cars = count_cars
-    @speed = speed
-    @route_position = 0    
+    @speed = speed        
   end
 
   def add_car 
@@ -16,24 +14,29 @@ class Train
     puts @count_cars
   end
 
+  def speed(speed)
+    @speed = speed
+  end
+
   def delete_car 
     @speed = 0
     @count_cars -= 1 if @count_cars != 0
     puts @count_cars
   end
 
-  # def set_route
-  #   if @route    
-  #     @route_position = 0
-  #     puts "Установлен маршрут #{@route.name}"
-  #   else
-  #     puts 'Утановите маршрут!'
-  # end
+  def set_route(route)
+    @route = route    
+    @route_position = 0
+    @route.stations[0].add_train(self)
+    puts "Установлен маршрут #{@route.name}"    
+  end
 
-  def next_station
+  def go_next_station
     if @route
       if (@route.stations.size - 1) > @route_position
-        @route_position += 1 
+        @route.stations[@route_position].send_train(self)
+        @route_position += 1
+        @route.stations[@route_position].add_train(self) 
         puts "Текущая станция #{@route.stations[@route_position].name}"
       end
     else
@@ -41,10 +44,12 @@ class Train
     end
   end
 
-  def prev_station
+  def go_prev_station
     if @route
       if  @route_position != 0 
-        @route_position -= 1
+        @route.stations[@route_position].send_train(self)
+        @route_position += 1
+        @route.stations[@route_position].add_train(self)
         puts "Текущая станция #{@route.stations[@route_position].name}"
       end
     else
@@ -52,13 +57,27 @@ class Train
     end
   end
 
-  def position
-    if @route
-      puts "Пердыдущая станция #{@route.stations[@route_position - 1].name}" if @route_position != 0
-      puts "Текущая станция #{@route.stations[@route_position].name}"
-      puts "Следующая станция #{@route.stations[@route_position + 1].name}" if (@route.stations.size - 1) > @route_position
+  def current_station
+    if @route    
+      @route.stations[@route_position]      
     else
       puts 'Установите маршрут'
-    end
+    end  
+  end
+
+  def show_next_station    
+    if @route
+       @route.stations[@route_position + 1] if (@route.stations.size - 1) > @route_position      
+    else
+      puts 'Установите маршрут'
+    end  
+  end
+
+  def show_prev_station    
+    if @route
+       @route.stations[@route_position - 1] if @route_position != 0   
+    else
+      puts 'Установите маршрут'
+    end  
   end
 end
