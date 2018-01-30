@@ -19,9 +19,9 @@ class Train
     @count_cars -= 1 if @count_cars != 0
     puts @count_cars
   end
-  
+
   def add_speed(speed)
-    @speed = speed
+    @speed += speed
   end
 
   def stop
