@@ -14,15 +14,19 @@ class Train
     puts @count_cars
   end
 
-  def speed(speed)
-    @speed = speed
-  end
-
   def delete_car 
     @speed = 0
     @count_cars -= 1 if @count_cars != 0
     puts @count_cars
   end
+  
+  def add_speed(speed)
+    @speed = speed
+  end
+
+  def stop
+    @speed = 0
+  end  
 
   def set_route(route)
     @route = route    
