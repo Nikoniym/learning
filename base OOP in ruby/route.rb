@@ -3,8 +3,7 @@ class Route
 
   def initialize(first_station, last_station)
     @first_station = first_station
-    @last_station = last_station
-    @way_stations = [] 
+    @last_station = last_station    
     @name = "#{first_station.name} - #{last_station.name}"
     @stations = [@first_station, @last_station]
   end
@@ -26,6 +25,6 @@ class Route
   end
 
   def all_station
-    @stations
+    puts @stations.join(' - ')
   end 
 end
