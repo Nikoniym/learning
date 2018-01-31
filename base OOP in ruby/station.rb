@@ -19,7 +19,7 @@ class Station
   end
 
   def list_trains_type(type)
-    @trains.each { |train| train if type == train.type }
+    @trains.select { |train| train if type == train.type }
   end
 
   def send_train(train)

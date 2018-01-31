@@ -38,28 +38,20 @@ class Train
   end
 
   def go_next_station
-    if @route
-      if (@route.stations.size - 1) > @route_position
+    if @route && (@route.stations.size - 1) > @route_position
         @route.stations[@route_position].send_train(self)
         @route_position += 1
         @route.stations[@route_position].add_train(self)
         puts "Текущая станция #{@route.stations[@route_position].name}"
-      end
-    else
-      puts 'Установите маршрут'
     end
   end
 
   def go_prev_station
-    if @route
-      if  @route_position != 0
+    if @route && @route_position != 0
         @route.stations[@route_position].send_train(self)
         @route_position -= 1
         @route.stations[@route_position].add_train(self)
         puts "Текущая станция #{@route.stations[@route_position].name}"
-      end
-    else
-      puts 'Установите маршрут'
     end
   end
 
@@ -72,18 +64,14 @@ class Train
   end
 
   def show_next_station
-    if @route
-      @route.stations[@route_position + 1] if (@route.stations.size - 1) > @route_position
-    else
-      puts 'Установите маршрут'
+    if @route && (@route.stations.size - 1) > @route_position
+      @route.stations[@route_position + 1]
     end
   end
 
   def show_prev_station
-    if @route
-       @route.stations[@route_position - 1] if @route_position != 0
-    else
-      puts 'Установите маршрут'
+    if @route && @route_position != 0
+       @route.stations[@route_position - 1]
     end
   end
 end
