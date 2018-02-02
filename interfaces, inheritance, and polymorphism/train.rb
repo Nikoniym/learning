@@ -48,7 +48,11 @@ class Train
     @cars << car
   end
 
-  def delete_car
-    @cars.delete_at(-1)
+  def delete_car(action)
+    case action
+      when 1 then @cars.delete_at(-1)
+      when 2 then @cars.delete_at(0)
+      else 'Ошибка ввода!!!'
+    end
   end
 end

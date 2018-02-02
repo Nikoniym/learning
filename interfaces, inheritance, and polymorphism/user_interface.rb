@@ -48,7 +48,7 @@ class UserInterface
   end
 
   def create_trains
-    loop  do
+    loop do
       puts "Введите номер поезда или для возвращения обратно нажмите клавишу enter"
       number = gets.chomp
       break if number == ''
@@ -66,39 +66,40 @@ class UserInterface
 
   def create_route
     if @stations.size >= 2
-      loop  do
-        @stations.each.with_index(1) { |station, index|  puts "#{index} - #{station.name}" }
+      loop do
+        show_list(@stations)
         puts "Введите номер начальной станции в маршруте или для возвращения обратно нажмите клавишу enter"
         first_station = gets.chomp
-        break if first_station == ''
+        break if input_validation?(first_station, @stations)
 
         puts "Введите номер конечной станции в маршруте"
         last_station = gets.chomp
-        if last_station.to_i != first_station.to_i
+        if last_station.to_i != first_station.to_i || input_validation?(last_station, @stations)
           @routes << Route.new(@stations[first_station.to_i - 1], @stations[last_station.to_i - 1])
+        else
+          puts 'Ошибка ввода!!!'
         end
       end
     else
       puts 'Для установки маршрута недостаточно станций!!!'
-      create_stations
     end
     info
   end
 
   def change_route
     if @stations.size > 2
-      puts "Введите номер маршрута для добавления станции"
-      @routes.each.with_index(1) { |route, index|  puts "#{index} - #{route.name}" }
+      puts "Введите номер маршрута для изменеия промежуточных станции"
+      show_list(@routes)
       route = @routes[gets.chomp.to_i - 1]
 
       puts 'Введите 1 - если хотите добавить станцию. Введите 2 - еcли удалить'
       action = gets.chomp.to_i
 
-      loop  do
-        @stations.each.with_index(1) { |station, index|  puts "#{index} - #{station.name}" }
+      loop do
+        show_list(@stations)
         puts "Введите номер станции или для возвращения обратно нажмите клавишу enter"
         station = gets.chomp
-        break if station == ''
+        break if input_validation?(station, @stations)
         case action
           when 1 then route.add_station(@stations[station.to_i - 1])
           when 2 then route.delete_station(@stations[station.to_i - 1])
@@ -107,21 +108,20 @@ class UserInterface
       end
     else
       puts 'Для изменения маршрута недостаточно станций!!!'
-      create_stations
     end
     info
   end
 
   def set_route
     if (@routes.size && @trains.size) > 0
-      loop  do
-        @trains.each.with_index(1) { |train, index|  puts "#{index} - #{train.name} #{train.type}" }
+      loop do
+        show_list(@trains)
         puts "Введите номер необходимого поезда или для возвращения обратно нажмите клавишу enter"
         train = gets.chomp
-        break if train == ''
+        break if input_validation?(train, @trains)
 
         puts "Введите номер маршрута"
-        @routes.each.with_index(1) { |route, index|  puts "#{index} - #{route.name}" }
+        show_list(@routes)
         @trains[train.to_i - 1].set_route(@routes[gets.chomp.to_i - 1])
       end
     else
@@ -132,26 +132,13 @@ class UserInterface
 
   def change_cars
     if  @trains.size > 0
-      loop  do
-        @trains.each.with_index(1) { |train, index|  puts "#{index} - #{train.name} #{train.type}" }
+      loop do
+        show_list(@trains)
         puts "Введите номер необходимого поезда или для возвращения обратно нажмите клавишу enter"
         train = gets.chomp
 
-        break if train == ''
-        puts 'Введите 1 - если хотите добавить вагоны. Введите 2 - еcли удалить'
-        action = gets.chomp.to_i
-
-        puts 'Введите количесво вагонов'
-        case action
-          when 1 then  gets.chomp.to_i.times { @trains[train.to_i - 1].add_car(@trains[train.to_i - 1].class == PassengerTrain ? PassengerCar.new : CargoCar.new) }
-          when 2
-            if @trains[train.to_i - 1].cars.size >= gets.chomp.to_i
-              gets.chomp.to_i.times { @trains[train.to_i - 1].delete_car }
-            else
-              puts "У поезда всего #{@trains[train.to_i - 1].cars.size} вагонов"
-            end
-          else puts 'Ошибка ввода!!!'
-        end
+        break if input_validation?(train, @trains)
+        add_and_remove_cares(train)
       end
     else
       puts "Поездов нет!!!"
@@ -160,20 +147,40 @@ class UserInterface
     info
   end
 
+  def add_and_remove_cares(train)
+    puts 'Введите 1 - если хотите добавить вагоны. Введите 2 - еcли удалить'
+    action = gets.chomp.to_i
+
+    puts 'Введите количесво вагонов'
+    case action
+      when 1 then  gets.chomp.to_i.times { @trains[train.to_i - 1].add_car(@trains[train.to_i - 1].class == PassengerTrain ? PassengerCar.new : CargoCar.new) }
+      when 2
+        count = gets.chomp.to_i
+        if @trains[train.to_i - 1].cars.size >= count
+          puts 'Введите 1 - для удаления сначала состава. Введите 2 - для удаления с конца состава'
+          action = gets.chomp.to_i
+          count.times { @trains[train.to_i - 1].delete_car(action) }
+        else
+          puts "У поезда всего #{@trains[train.to_i - 1].cars.size} вагонов"
+        end
+      else puts 'Ошибка ввода!!!'
+    end
+  end
+
   def movement_rote
-    if  @trains.size > 0
+    if @trains.size > 0
       loop do
-        @trains.each.with_index(1) { |train, index|  puts "#{index} - #{train.name} #{train.type}" }
+        show_list(@trains)
 
         puts "Введите номер необходимого поезда или для возвращения обратно нажмите клавишу enter"
         train = gets.chomp
 
-        break if train == ''
+        break if input_validation?(train, @trains)
         puts 'Введите 1 - Двежение на следующую станцию. Введите 2 - Движение на предыдущую станцию'
         action = gets.chomp.to_i
         case action
-          when 1 then  @trains[train.to_i - 1].go_next_station
-          when 2 then  @trains[train.to_i - 1].go_prev_station
+          when 1 then @trains[train.to_i - 1].go_next_station
+          when 2 then @trains[train.to_i - 1].go_prev_station
           else puts 'Ошибка ввода!!!'
         end
       end
@@ -186,11 +193,11 @@ class UserInterface
 
   def list_stations
     if @routes.size > 0
-      loop  do
-        @routes.each.with_index(1) { |route, index|  puts "#{index} - #{route.name}" }
+      loop do
+        show_list(@routes)
         puts "Введите номер маршрута для отображения списка станций или для возвращения обратно нажмите клавишу enter"
         route = gets.chomp
-        break if route == ''
+        break if input_validation?(route, @routes)
         @routes[route.to_i - 1].all_stations
       end
     else
@@ -202,11 +209,11 @@ class UserInterface
 
   def list_trains
     if @stations.size > 0
-      loop  do
-        @stations.each.with_index(1) { |station, index|  puts "#{index} - #{station.name}" }
+      loop do
+        show_list(@stations)
         puts "Введите номер станции для отображения находящихся на ней поездов или для возвращения обратно нажмите клавишу enter"
         station = gets.chomp
-        break if station == ''
+        break if input_validation?(station, @stations)
         @stations[station.to_i - 1].list_trains
       end
     else
@@ -214,5 +221,13 @@ class UserInterface
       create_stations
     end
     info
+  end
+
+  def show_list(list)
+    list.each.with_index(1) { |list, index| puts "#{index} - #{list.name}" }
+  end
+
+  def input_validation?(input, array)
+    input == '' || input.to_i > array.size || input.to_i < 1
   end
 end
