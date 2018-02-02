@@ -9,7 +9,7 @@ class UserInterface
     puts 'Введите 1 для создания станций'
     puts 'Введите 2 для создания поездов'
     puts 'Введите 3 для создания маршрута'
-    puts 'Введите 4 для изменеия промежуточных станций в маршруте'
+    puts 'Введите 4 для изменения промежуточных станций в маршруте'
     puts 'Введите 5 для назначения маршрута поезду'
     puts 'Введите 6 для изменения количества вагонов в поезде'
     puts 'Введите 7 для перемещения поезд по маршруту вперед и назад'
@@ -113,7 +113,7 @@ class UserInterface
   end
 
   def set_route
-    if (@routes.size && @trains.size) > 0
+    if !@routes.size.zero? && !@trains.size.zero?
       loop do
         show_list(@trains)
         puts "Введите номер необходимого поезда или для возвращения обратно нажмите клавишу enter"
@@ -138,7 +138,7 @@ class UserInterface
         train = gets.chomp
 
         break if input_validation?(train, @trains)
-        add_and_remove_cares(train)
+        add_and_remove_cares(@trains[train.to_i - 1])
       end
     else
       puts "Поездов нет!!!"
@@ -151,17 +151,19 @@ class UserInterface
     puts 'Введите 1 - если хотите добавить вагоны. Введите 2 - еcли удалить'
     action = gets.chomp.to_i
 
-    puts 'Введите количесво вагонов'
+
     case action
-      when 1 then  gets.chomp.to_i.times { @trains[train.to_i - 1].add_car(@trains[train.to_i - 1].class == PassengerTrain ? PassengerCar.new : CargoCar.new) }
+      when 1
+        puts 'Введите количесво вагонов'
+        gets.chomp.to_i.times { train.add_car(train.class == PassengerTrain ? PassengerCar.new : CargoCar.new) }
       when 2
-        count = gets.chomp.to_i
-        if @trains[train.to_i - 1].cars.size >= count
-          puts 'Введите 1 - для удаления сначала состава. Введите 2 - для удаления с конца состава'
-          action = gets.chomp.to_i
-          count.times { @trains[train.to_i - 1].delete_car(action) }
+        if train.cars.size != 0
+          puts 'Введите номер вагона чтобы его отцепить'
+          train.cars.each.with_index(1) { |car, index| puts index }
+          car = gets.chomp.to_i
+          train.delete_car(train.cars[car - 1]) if car > 0 && car <= train.cars.size
         else
-          puts "У поезда всего #{@trains[train.to_i - 1].cars.size} вагонов"
+          puts 'У поезда нет вагонов!!!'
         end
       else puts 'Ошибка ввода!!!'
     end

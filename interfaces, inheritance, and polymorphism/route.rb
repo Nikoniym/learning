@@ -15,7 +15,7 @@ class Route
   end
 
   def delete_station(delete_station)
-    @stations.delete(delete_station)  if @stations[1..-2].include?(delete_station)
+    @stations.delete(delete_station) if @stations[1..-2].include?(delete_station)
   end
 
   def all_stations

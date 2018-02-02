@@ -19,6 +19,6 @@ class Station
   end
 
   def list_trains
-    @trains.each { |train| puts "Поезд № #{train.name} тип #{train.type}" }
+    @trains.each { |train| puts "Поезд № #{train.name} тип #{train.class == PassengerTrain ? 'пассажирский' : 'грузовой'}" }
   end
 end
