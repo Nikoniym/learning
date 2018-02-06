@@ -10,11 +10,11 @@ module InstanceCounter
 
   module ClassMethods
     def instances
-      @instances = ObjectSpace.each_object(self).count
+      @instances ||= 0
     end
 
     def add_count
-      @instances ||= ObjectSpace.each_object(self).count
+      @instances ||= 0
       @instances += 1
     end
   end

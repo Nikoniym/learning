@@ -1,20 +1,18 @@
 class Train
   include ManufacturerName
 
+  @@trains = {}
+
   attr_reader :number, :speed, :type, :cars
 
   def initialize(number)
     @number = number
     @speed = 0
-    @cars = []
+    @@trains[self.number] = self
   end
 
   def self.find(number)
-    trains = ObjectSpace.each_object(self).to_a
-
-    result = trains.select{ |train| train if train.number == number }.to_a
-
-    result.empty? ? nil : result
+    @@trains[number]
   end
 
   def add_speed(speed)
