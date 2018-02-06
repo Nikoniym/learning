@@ -3,16 +3,14 @@ module ManufacturerName
 end
 
 module InstanceCounter
-
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
 
-
   module ClassMethods
     def instances
-      @instances ||= ObjectSpace.each_object(self).count
+      @instances = ObjectSpace.each_object(self).count
     end
 
     def add_count
