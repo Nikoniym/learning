@@ -1,15 +1,3 @@
-module Validation
-  def valid?
-    validate!
-  rescue RuntimeError
-    false
-  end
-end
-
-module ManufacturerName
-  attr_accessor :manufacturer_name
-end
-
 module InstanceCounter
   def self.included(base)
     base.extend ClassMethods
@@ -35,4 +23,3 @@ module InstanceCounter
     end
   end
 end
-

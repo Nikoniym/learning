@@ -71,6 +71,7 @@ class Train
   def validate!
     raise 'Допустимый формат: три буквы или цифры в любом порядке, необязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса.' if @number !~ NUMBER_FORMAT
     raise "Поезд с № #{@number} уже существует!!!" if @@trains.keys.include?(@number)
+    raise 'Поле номер поезда не может быть пустым' if @number.empty?
     true
   end
 end

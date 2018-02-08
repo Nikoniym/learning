@@ -37,6 +37,7 @@ class Station
 
   def validate!
     raise "Станция #{@name} уже существует" if  @@stations.select{ |station| station.name == @name}.size > 0
+    raise 'Поле название станции не может быть пустым' if @name.empty?
     true
   end
 end

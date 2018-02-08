@@ -1,4 +1,6 @@
-require_relative 'modules'
+require_relative 'validation'
+require_relative 'instance_counter'
+require_relative 'manufacturer'
 require_relative 'station'
 require_relative 'route'
 require_relative 'train'
