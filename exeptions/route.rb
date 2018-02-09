@@ -28,7 +28,7 @@ class Route
 
   def validate!
     raise 'Названия станций не могут быть одинаковыми!!!' if  @stations[0] == @stations[1]
-    raise 'Передаваемый объект не является объектом класса Station' if (@stations[0].class || @stations[1].class) != Station
+    raise 'Передаваемый объект не является объектом класса Station' if @stations[0].class != Station || @stations[1].class != Station
     true
   end
 end
