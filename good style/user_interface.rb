@@ -107,14 +107,16 @@ class UserInterface
     puts 'Введите номер конечной станции в маршруте'
     last_station = gets.chomp
     if !input_validation?(last_station, @stations)
-      begin
-        @routes << Route.new(@stations[first_station.to_i - 1], @stations[last_station.to_i - 1])
-      rescue RuntimeError => e
-        puts e.message
-      end
+      extend_route_validation(first_station, last_station)
     else
       puts 'Ошибка ввода!!!'
     end
+  end
+
+  def extend_route_validation(first_station, last_station)
+    @routes << Route.new(@stations[first_station.to_i - 1], @stations[last_station.to_i - 1])
+  rescue RuntimeError => e
+    puts e.message
   end
 
   def change_route
@@ -122,16 +124,17 @@ class UserInterface
       puts 'Введите номер маршрута для изменеия промежуточных станции'
       show_list(@routes)
       route = @routes[gets.chomp.to_i - 1]
-      puts 'Введите 1 - если хотите добавить станцию. Введите 2 - еcли удалить'
-      action = gets.chomp.to_i
-      multi_add_station(route, action)
+
+      multi_add_station(route)
     else
       puts 'Для изменения маршрута недостаточно станций!!!'
     end
     info
   end
 
-  def multi_add_station(route, action)
+  def multi_add_station(route)
+    puts 'Введите 1 - если хотите добавить станцию. Введите 2 - еcли удалить'
+    action = gets.chomp.to_i
     loop do
       show_list(@stations)
       puts 'Введите номер станции или для возвращения обратно нажмите клавишу enter'
@@ -161,13 +164,21 @@ class UserInterface
   def multi_train_for_seting_route
     loop do
       show_list(@trains)
-      puts 'Введите номер необходимого поезда или для возвращения обратно нажмите клавишу enter'
-      train = gets.chomp
-      break if input_validation?(train, @trains)
-      puts 'Введите номер маршрута'
+      input_number
+      break if input_validation?(@train, @trains)
+      extend_seting_route(@train)
       show_list(@routes)
-      @trains[train.to_i - 1].seting_route(@routes[gets.chomp.to_i - 1])
     end
+  end
+
+  def extend_seting_route(train)
+    puts 'Введите номер маршрута'
+    @trains[train.to_i - 1].seting_route(@routes[gets.chomp.to_i - 1])
+  end
+
+  def input_number
+    puts 'Введите номер необходимого поезда или для возвращения обратно нажмите клавишу enter'
+    @train = gets.chomp
   end
 
   def change_cars
@@ -210,12 +221,17 @@ class UserInterface
   def remove_car(train)
     if !train.cars.empty?
       puts 'Введите номер вагона чтобы его отцепить'
-      train.cars.each.with_index(1) { |_car, index| puts index }
-      car = gets.chomp.to_i
-      train.delete_car(train.cars[car - 1]) if car > 0 && car <= train.cars.size
+      count_cars = train.cars.count
+      1.upto(count_cars) { |index| puts index }
+      input_number_car(train)
     else
       puts 'У поезда нет вагонов!!!'
     end
+  end
+
+  def input_number_car(train)
+    car = gets.chomp.to_i
+    train.delete_car(train.cars[car - 1]) if car > 0 && car <= train.cars.size
   end
 
   def list_cars
@@ -240,12 +256,12 @@ class UserInterface
 
   def check_type(train)
     if train.class == PassengerTrain
-      train.iterate_cars do |car, index|
+      train.each_cars do |car, index|
         puts ["№ #{index} - пассажирский", "Cвободных мест - #{car.free_place_count}",
               "Занятых мест - #{car.take_place_count}"]
       end
     else
-      train.iterate_cars do |car, index|
+      train.each_cars do |car, index|
         puts ["#{index} - грузовой", "свободный объем - #{car.free_volume}",
               "занятый объем - #{car.occupied_volume}"]
       end
@@ -377,7 +393,7 @@ class UserInterface
             'или для возвращения обратно нажмите клавишу enter']
       station = gets.chomp
       break if input_validation?(station, @stations)
-      @stations[station.to_i - 1].iterate_trains { |train| puts_train(train) }
+      @stations[station.to_i - 1].each_trains { |train| puts_train(train) }
     end
   end
 

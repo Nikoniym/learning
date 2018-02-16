@@ -18,7 +18,7 @@ class Train
     puts "Тип #{self.class == PassengerTrain ? 'пассажирский' : 'грузовой'}"
   end
 
-  def iterate_cars
+  def each_cars
     @cars.each.with_index(1) { |car, index| yield(car, index) }
   end
 
@@ -55,7 +55,7 @@ class Train
   end
 
   def go_prev_station
-    if @route && @route_position != 0
+    if @route && @route_position.nonzero?
       @route.stations[@route_position].send_train(self)
       @route_position -= 1
       @route.stations[@route_position].add_train(self)

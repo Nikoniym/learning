@@ -13,7 +13,7 @@ class Station
     @@stations << self
   end
 
-  def iterate_trains
+  def each_trains
     @trains.each { |train| yield(train) } if block_given?
   end
 
@@ -36,7 +36,7 @@ class Station
   def list_trains
     @trains.each do |train|
       puts "Поезд № #{train.name}"
-      puts "Тип #{train.class == PassengerTrain ? 'пассажирский' : 'грузовой'}"
+      puts "Тип #{train.is_a? PassengerTrain ? 'пассажирский' : 'грузовой'}"
     end
   end
 
