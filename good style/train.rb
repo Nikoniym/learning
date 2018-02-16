@@ -15,7 +15,7 @@ class Train
     @speed = 0
     @@trains[self.number] = self
     puts "Создан поезд № #{@number}"
-    puts "Тип #{self.class == PassengerTrain ? 'пассажирский' : 'грузовой'}"
+    puts "Тип #{self.is_a? PassengerTrain ? 'пассажирский' : 'грузовой'}"
   end
 
   def each_cars
