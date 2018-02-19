@@ -29,7 +29,7 @@ module Validation
 
   module InstanceMethods
     def validate!
-      self.class.variables.each do |variable|
+      self.class.superclass.variables.each do |variable|
         value = instance_variable_get("@#{variable[0]}".to_sym)
         variable[1].each { |key, arg| send "validate_#{key}", variable[0], value, arg}
       end

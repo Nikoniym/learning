@@ -1,6 +1,6 @@
 class Train
   include Validation
-  # include ManufacturerName
+  include ManufacturerName
   extend Accessors
 
   NUMBER_FORMAT = /^[a-zа-я0-9]{3}-?[a-zа-я0-9]{2}$/i
@@ -10,9 +10,9 @@ class Train
   validate :number, :presence, :format, NUMBER_FORMAT
   validate :speed, :presence, :type, Integer
 
-  attr_accessor_with_history :type
+  attr_accessor_with_history :type, :arg
 
-  strong_attr_acessor :type, String
+  strong_attr_acessor :variable_type, String
 
   @@trains = {}
 
@@ -25,7 +25,7 @@ class Train
     @speed = 0
     @@trains[self.number] = self
     puts "Создан поезд № #{@number}"
-    puts "Тип #{self.is_a? PassengerTrain ? 'пассажирский' : 'грузовой'}"
+    puts "Тип #{(self.is_a? PassengerTrain) ? 'пассажирский' : 'грузовой'}"
   end
 
   def each_cars
